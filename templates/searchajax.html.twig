@@ -1,14 +1,8 @@
 <div class="search_result">
     {% for element in elements %}
     <div class="row search_row" data-caption="{{ element.caption|e }}">
-        <div class="col-xs-8 text-left">
-            {{ element.caption|e }} ({{ element.tcaption|e }}) {% if app.environment=='dev' %}[{{ element.id|e }}]{% endif%}
-        </div>
-        <div class="col-xs-4 text-right">
-            <a title="{{ element.caption }}" class=""
-               href="{{ url('oneelement',{ 'typealias':element.talias, 'elementalias':element.alias }) }}">
-                Подробнее
-            </a>
+        <div class="col-xs-12 text-left">
+            <a href="{{ url('oneelement',{ 'typealias':element.talias, 'elementalias':element.alias }) }}">{{ element.caption|e }} ({{ element.tcaption|e }}) {% if app.environment=='dev' %}[{{ element.id|e }}]{% endif%}</a>
         </div>
     </div>
     {% endfor %}

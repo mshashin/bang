@@ -15,27 +15,30 @@
                          <div class="row">
                              <div class="col-xs-12">
                                  <label for="element_id1" class="form-control-label">Элемент1:</label>
-                                 <select class="form-control selectpicker" title="--Выбор из списка--"  id="element_id1" data-live-search="true" name="element_id1">
+                                 <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id1" data-live-search="true" name="element_id1">
                                      {% for elem in elements  %}
                                          <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
                                      {% endfor %}
                                  </select>
+                                 <div class="selectedinfo" id="selected1info"></div>
                              </div>
                              <div class="col-xs-12 text-center text40" ><span class="glyphicon glyphicon-plus"></span></div>
                              <div class="col-xs-12">
                                  <label for="element_id2" class="form-control-label">Элемент2:</label>
-                                 <select class="form-control selectpicker" title="--Выбор из списка--"  id="element_id2" data-live-search="true" name="element_id2">
+                                 <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id2" data-live-search="true" name="element_id2">
                                      {% for elem in elements  %}
                                          <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
                                      {% endfor %}
                                  </select>
+                                 <div class="selectedinfo" id="selected2info"></div>
                              </div>
                              <div class="col-xs-12 text-center text40"><span class="glyphicon glyphicon-arrow-down"></span></div>
-                             <div class="col-xs-12" id="answer">
+                             <div class="col-xs-12" id="answer"></div>
                          </div>
-                 </div>
-             </div>
-         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
      </div>
      <script>
 
@@ -45,6 +48,12 @@
                  var $selected1=$('select[id=element_id1] option').filter(':selected');
                  var $selected2=$('select[id=element_id2] option').filter(':selected');
                  var $answer=$('#answer');
+                 if ( $(this).attr('id')=='element_id1') {
+                     $('#selected1info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected1.val()+'">Подробнее про '+$selected1.text()+'</a>')
+                 }
+                 if ( $(this).attr('id')=='element_id2') {
+                     $('#selected2info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected2.val()+'">Подробнее про '+$selected2.text()+'</a>')
+                 }
                  if ($selected1.val() == $selected2.val()){
                      $answer.html('');
                  }

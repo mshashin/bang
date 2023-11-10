@@ -21,10 +21,15 @@
          <hr/>
          {% for element in elements %}
          <div class="row">
-             <div class="col-xs-12">
-                 <a href="{{ url('oneelement', {'typealias':typeelement.alias, 'elementalias':element.alias }) }}">{{ element.caption|e }}</a>
+             <div class="col-xs-2">
+                 <div>{{ include('pages/element-image.html.twig', {'element':element}) }}</div>
+             </div>
+             <div class="col-xs-10">
+                 <a href="{{ url('oneelement', {'typealias':typeelement.alias, 'elementalias':element.alias }) }}"><h2 class="elementheader">{{ element.caption|e }}</h2></a>
+                 <p>{{ element.short|e }}</p>
              </div>
          </div>
+         <hr/>
          {% endfor %}
          <hr/>
          <div class="row">

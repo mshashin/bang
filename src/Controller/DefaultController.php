@@ -29,6 +29,24 @@ class DefaultController extends InitializableController
     }
 
     /**
+     * @Route("/byid/{id}", methods={"GET","HEAD"}, name="byid", priority="2")
+     */
+    public function byId($id):Response
+    {
+        /** @var Element $element */
+        $element=$this->getRepository(Element::class)->findOneBy(array('id'=>$id));
+
+        if (!$element) {
+            throw $this->createNotFoundException(
+                'Нет элемента, связанного с '.$id
+            );
+        }
+        else {
+            return $this->redirectToRoute('oneelement',array('typealias'=>$element->getType()->getAlias(),'elementalias'=>$element->getAlias()));
+        }
+    }
+
+    /**
      * @Route("/{typealias}/{elementalias}", methods={"GET","HEAD"}, name="oneelement")
      */
     public function oneElement($typealias, $elementalias):Response
