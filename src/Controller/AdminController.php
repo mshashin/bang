@@ -28,11 +28,13 @@ class AdminController extends InitializableController
         $rule= new Rule();
         $rule->setCaption($description);
         $rule->addElement($element);
-        foreach ($elements2 as $element_id2){
-            /** @var Element $element2 */
-            $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
-            if ($element2) {
-                $rule->addElement($element2);
+        if ($elements2) {
+            foreach ($elements2 as $element_id2){
+                /** @var Element $element2 */
+                $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
+                if ($element2) {
+                    $rule->addElement($element2);
+                }
             }
         }
         $this->manager->persist($rule);
@@ -50,6 +52,7 @@ class AdminController extends InitializableController
         $element_id1=$this->request->get('element_id');
         $description=$this->request->get('description');
         $rule_id=$this->request->get('rule_id');
+        $elements2=$this->request->get('elements2');
 
         /** @var Element $element */
         $element=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id1));
@@ -58,8 +61,27 @@ class AdminController extends InitializableController
         if (!$element or !$rule) {
             return $this->createNotFoundException();
         }
-
         $rule->setCaption($description);
+        /** @var Element $elem */
+        foreach ($rule->getElements() as $elem){
+            if ($elem->getId() != $element->getId()) {
+                $rule->removeElement($elem);
+            }
+        }
+        $this->manager->persist($rule);
+        $this->manager->flush();
+
+        if ($elements2) {
+            foreach ($elements2 as $element_id2){
+                /** @var Element $element2 */
+                $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
+                if ($element2) {
+                    $rule->addElement($element2);
+                }
+            }
+        }
+
+
         $this->manager->persist($rule);
         $this->manager->flush();
 

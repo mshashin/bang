@@ -104,6 +104,14 @@
                                                      {% if app.user %}
                                                          <p><a data-id="{{ rule.rule.id|e }}" data-caption="{{ rule.rule.caption|e }}" data-toggle="modal" data-target="#editruleModal" class="btn btn-info starteditrule"><span class="glyphicon glyphicon-pencil"></span> Редактировать</a></p>
                                                      {% endif %}
+                                                     <div class="hidden" id="alsoelemsrule{{ rule.rule.id|e }}">
+                                                         <p title="Кликните для удаления" class="element_2" data-id="{{ rule.main.id|e }}">{{ rule.main.caption|e }} ({{ rule.main.type.caption|e }})</p>
+                                                         <input name="elements2[]" type="hidden" value="{{ rule.main.id|e }}">
+                                                         {% for elem in rule.also %}
+                                                             <p title="Кликните для удаления" class="element_2" data-id="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.type.caption|e }})</p>
+                                                             <input name="elements2[]" type="hidden" value="{{ elem.id|e }}">
+                                                         {% endfor %}
+                                                     </div>
                                                  </div>
                                              </div>
                                          {% endfor %}
@@ -168,7 +176,7 @@
                         <div class="modal-body">
                              <div class="form-group">
                                  <label for="descriptionrule" class="col-form-label">Новый текст правила:</label>
-                                 <textarea class="form-control" id="descriptionrule" name="description" style="min-height:60vh"></textarea>
+                                 <textarea class="form-control" id="descriptionrule" name="description" style="min-height:50vh"></textarea>
                              </div>
                             <div class="form-group">
                                 <label for="element_id2-edit" class="form-control-label">Также привязать элементы:</label>
@@ -267,7 +275,7 @@
      <script>
          $(function() {
              $('.selectpicker').selectpicker();
-             $("select").on("changed.bs.select",
+             $("#element_id2").on("changed.bs.select",
                  function(e, clickedIndex, newValue, oldValue) {
                      var $selected=$('select[id=element_id2] option').filter(':selected')
                      var $elements2=$('#elements2')
@@ -281,14 +289,30 @@
 
                      $('.selectpicker').val('default');
                      $('.selectpicker').selectpicker("refresh");
-
-
-                     //console.log(this.value, clickedIndex, newValue, oldValue)
+                 })
+             $("#element_id2-edit").on("changed.bs.select",
+                 function(e, clickedIndex, newValue, oldValue) {
+                     var $selected=$('select[id=element_id2-edit] option').filter(':selected')
+                     var $elements2=$('#elements2-edit')
+                     $elements2.append('<p title="Кликните для удаления" class="element_2" data-id="'+$selected.val()+'">'+$selected.text()+'</p>');
+                     $elements2.append('<input name="elements2[]" type="hidden" value="'+$selected.val()+'">');
+                     $('.element_2').on('click',function(e) {
+                         $('input[value="'+$(this).data('id')+'"]').remove();
+                         $(this).remove();
+                     });
+                     $('.selectpicker').val('default');
+                     $('.selectpicker').selectpicker("refresh");
                  });
          });
          $('#editruleModal').on('show.bs.modal', function (e) {
              var button = $(e.relatedTarget)
              var modal = $(this)
+             var elements2=$('#elements2-edit')
+             elements2.html($('#alsoelemsrule'+button.data('id')).html());
+             $('.element_2').on('click',function(e) {
+                 $('input[value="'+$(this).data('id')+'"]').remove();
+                 $(this).remove();
+             });
              modal.find('#descriptionrule').val(button.data('caption'));
              modal.find('#rule_id').val(button.data('id'));
          })
