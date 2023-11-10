@@ -50,7 +50,15 @@ body {
     color:#9d9d9d;
 }
 
+.accordion-section .collapsed h3:before {
+    content:"►";
 
+}
+
+.accordion-section h3:before {
+    content:"▼";
+
+}
 
 
 .block-content {

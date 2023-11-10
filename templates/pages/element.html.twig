@@ -29,6 +29,7 @@
              </div>
          </div>
          <hr/>
+         {# вариант вывода правил без аккордеона
          {% set elem_ids=[]%}
          <div class="row allrules">
              {% for row in content_arr %}
@@ -66,45 +67,92 @@
                  {% endif %}
              {% endfor%}
          </div>
+         <hr/>  #}
 
+         {% set elem_ids=[]%}
+         <section class="accordion-section clearfix" aria-label="">
 
-         {% if app.user %}
-         <hr/>
-         <div class="row">
-             <div class="col-xs-12">
-                 <h3>Добавить новое правило для "{{ element.caption|e }}"</h3>
-                 <form action="{{ url('addrule') }}" id="newruleform" style="max-width:600px;">
-                     <div class="form-group">
-                         <label for="description" class="form-control-label">Текст правила:</label>
-                         <textarea class="form-control" aria-required="true" required id="description" name="description"></textarea>
-                     </div>
-                     <div class="form-group">
-                         <label for="element_id2" class="form-control-label">Также привязать элемент:</label>
-                         <div class="row">
-                             <div class="col-xs-12" id="elements2"></div>
-                             <div class="col-xs-12 col-md-12">
-                                 <select class="form-control selectpicker" title="--Выбор из списка--"  id="element_id2" data-live-search="true" name="element_id2">
-                                     {% for elem in alsoelements  %}
-                                         {% if elem.id != element.id and elem.id not in elem_ids %}
-                                             <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
-                                         {% endif %}
-                                     {% endfor %}
-                                 </select>
+                 <h2>Взаимодействие с другими элементами</h2>
+                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                     {% for row in content_arr %}
+                        {% if row.rules|length>0 %}
+                             <div class="panel panel-default">
+                                 <div class="panel-heading collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ row.type.id }}" aria-expanded="true" aria-controls="collapse0" role="button" id="heading{{ row.type.id }}">
+                                     <h3 class="panel-title">
+                                         {{ row.type.caption|e }} ({{ row.rules|length }})
+                                     </h3>
+                                 </div>
+                                 <div id="collapse{{ row.type.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ row.type.id }}">
+                                     <div class="panel-body">
+                                         {% for rule in row.rules %}
+                                             <div class="row oneelement">
+                                                 <div class="col-xs-2">
+                                                     {{ include('pages/element-image.html.twig',{'element': rule.main}) }}
+                                                 </div>
+                                                 <div class="col-xs-10">
+                                                     <a href="{{ url('oneelement', {'typealias':rule.main.type.alias|e, 'elementalias': rule.main.alias|e}) }}"><h3 class="elementheader" >{{ rule.main.caption|e }}</h3></a>
+                                                     <p>{{ rule.rule.caption|e }}
+                                                         {% if app.user %}
+                                                             <a data-id="{{ rule.rule.id|e }}" data-caption="{{ rule.rule.caption|e }}" data-toggle="modal" data-target="#editruleModal" class="starteditrule">Редактировать</a>
+                                                         {% endif %}
+                                                         {% set elem_ids=elem_ids|merge([rule.main.id]) %}
+                                                     </p>
+                                                     {% if rule.also|length>0 %}
+                                                         <p><b>См. также:</b>
+                                                             {% for elem in rule.also %}
+                                                                 {% if loop.index>1 %}, {% endif %}
+                                                                 <a href="{{ url('oneelement', {'typealias':elem.type.alias|e, 'elementalias': elem.alias|e}) }}">{{ elem.caption|e }}</a>
+
+                                                             {% endfor %}
+                                                         </p>
+                                                     {% endif %}
+                                                 </div>
+                                             </div>
+                                         {% endfor %}
+                                     </div>
+                                 </div>
                              </div>
-                         </div>
-                     </div>
-                     <input type="hidden" name="element_id1" value="{{ element.id|e }}">
-                     <button type="submit" class="btn btn-success">Добавить правило</button>
-                 </form>
-             </div>
-         </div>
-         {% endif %}
+                        {% endif %}
+                     {% endfor %}
+                 </div>
+         </section>
          <hr/>
          <div class="row">
              <div class="col-xs-12">
                  <a class="btn btn-default" href="{{ url('homepage') }}">На главную</a>
              </div>
          </div>
+         {% if app.user %}
+             <hr/>
+             <div class="row">
+                 <div class="col-xs-12">
+                     <h3>Добавить новое правило для "{{ element.caption|e }}"</h3>
+                     <form action="{{ url('addrule') }}" id="newruleform" style="max-width:600px;">
+                         <div class="form-group">
+                             <label for="description" class="form-control-label">Текст правила:</label>
+                             <textarea class="form-control" aria-required="true" required id="description" name="description"></textarea>
+                         </div>
+                         <div class="form-group">
+                             <label for="element_id2" class="form-control-label">Также привязать элемент:</label>
+                             <div class="row">
+                                 <div class="col-xs-12" id="elements2"></div>
+                                 <div class="col-xs-12 col-md-12">
+                                     <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id2" data-live-search="true" name="element_id2">
+                                         {% for elem in alsoelements  %}
+                                             {% if elem.id != element.id and elem.id not in elem_ids %}
+                                                 <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                             {% endif %}
+                                         {% endfor %}
+                                     </select>
+                                 </div>
+                             </div>
+                         </div>
+                         <input type="hidden" name="element_id1" value="{{ element.id|e }}">
+                         <button type="submit" class="btn btn-success">Добавить правило</button>
+                     </form>
+                 </div>
+             </div>
+         {% endif %}
      </div>
 
      <div class="modal fade" id="editruleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -119,8 +167,8 @@
                  <form id="editruleForm" action="{{ url('editrule') }}">
                      <div class="modal-body">
                              <div class="form-group">
-                                 <label for="message-text" class="col-form-label">Новый текст правила:</label>
-                                 <textarea class="form-control" id="description" name="description" style="min-height:80px;"></textarea>
+                                 <label for="descriptionrule" class="col-form-label">Новый текст правила:</label>
+                                 <textarea class="form-control" id="descriptionrule" name="description" style="min-height:60vh"></textarea>
                              </div>
                          </div>
                          <input type="hidden" name="element_id" value="{{ element.id|e }}">
@@ -146,8 +194,8 @@
                  <form id="editruleForm" action="{{ url('editelement') }}">
                      <div class="modal-body">
                          <div class="form-group">
-                             <label for="message-text" class="col-form-label">Дополнительные комментарии:</label>
-                             <textarea class="form-control" id="description" name="description" style="min-height:80px;"></textarea>
+                             <label for="descriptionelem" class="col-form-label">Дополнительные комментарии:</label>
+                             <textarea class="form-control" id="description" name="descriptionelem" style="min-height:60vh;"></textarea>
                          </div>
                      </div>
                      <input type="hidden" name="element_id" value="{{ element.id|e }}">
@@ -185,7 +233,7 @@
          $('#editruleModal').on('show.bs.modal', function (e) {
              var button = $(e.relatedTarget)
              var modal = $(this)
-             modal.find('#description').val(button.data('caption'));
+             modal.find('#descriptionrule').val(button.data('caption'));
              modal.find('#rule_id').val(button.data('id'));
          })
          $('#editElementModal').on('show.bs.modal', function (e) {
