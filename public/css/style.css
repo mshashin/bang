@@ -52,12 +52,13 @@ body {
 
 .accordion-section .collapsed h3:before {
     content:"►";
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 }
 
 .accordion-section h3:before {
     content:"▼";
-
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 

@@ -87,16 +87,18 @@ class DefaultController extends InitializableController
                     $also_arr=array();
                     unset($main);
                     $i=1;
+                    /** @var Element $elem */
                     foreach ($rule->getElements() as $elem) {
-                       if ($elem->getId()!=$element->getId() and $i<2) {
+                       if ($elem->getId()!=$element->getId() and $i<2 and $elem->getType()->getId()==$type->getId()) {
                            $main=$elem;
                            $i++;
                        }
                        else {
                            if ($elem->getId()!=$element->getId()) {
-                               array_push($also_arr,$element);
+                               array_push($also_arr,$elem);
                            }
                        }
+
                     }
 
                    array_push($rules_arr,array('rule'=>$rule,'main'=>$main,'also'=>$also_arr));
