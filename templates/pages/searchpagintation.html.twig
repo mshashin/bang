@@ -1,0 +1,29 @@
+{% if pages>1 %}
+    <ul class="pagination">
+        {% set _first = page == 1 %}
+        {% set _last = page == pages %}
+        {% set m=2 %}
+        {% if _first %}
+            <li class="disabled"><span class="glyphicon glyphicon-chevron-left"></span></li>
+        {% else %}
+            {% set _query = app.request.query.all|merge({'pagenum': page - 1, 'search':search|e}) %}
+            <li><a href="{{ url('search', _query) }}"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+        {% endif %}
+        {% for _page in 1..pages %}
+            {% if page == _page %}
+                <li class="active"><a href="">{{ _page|e }}</a></li>
+            {% elseif (_page > page-m  and  _page < page+m) or ( _page > (pages-m) )  or  ( _page < _first+m ) %}
+                {% set _query = app.request.query.all|merge({'pagenum': _page|e, 'search':search|e}) %}
+                <li><a title="Открыть {{ _page|e }} страницу" href="{{ url('search', _query) }}">{{ _page|e }}</a></li>
+            {% elseif (_page == page-m)  or ( _page == page+m) %}
+                <li class="points"><a>...</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if _last %}
+            <li class="disabled"><span class="glyphicon glyphicon-chevron-right"></span></li>
+        {% else %}
+            {% set _query = app.request.query.all|merge({'pagenum': page + 1, 'search':search|e}) %}
+            <li><a href="{{ url('search',_query) }}"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+        {% endif %}
+    </ul>
+{% endif %}

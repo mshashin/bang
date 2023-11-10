@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Поиск толкований по разным сонникам по запросу {{ search|e }}{% endblock %}
+
+{% block meta_desctiption %}Поиск толкованиц сна "{{ search|e }}" по нескольким сонникам.
+    Найдено {{ count|e }}
+{% endblock %}
+
+
+ {% block body %}
+     <div class="container">
+         <div class="row">
+             <div class="col-xs-12">
+                 <div class="panel panel-default">
+                     <div class="panel-heading"><h1>{% if search %}Результаты поиска по запросу "{{ search|e }}". Найдено: {{ count|e }}.{% else %}Задана пуска строка поиска{% endif%} </h1></div>
+                     <div class="panel-body">
+                         {% set interlength = 0 %}
+                         {% set i = 0 %}
+                         {% for word in words %}
+                             <h2><a target="_blank" href="{{ url('oneword', {'alias': word.alias}) }}">{{ word.caption|e }}</a></h2>
+                             {% set interpretation=word.viewinterpretations[0] %}
+                             {% if interpretation.dreambook %} <b>{{ interpretation.dreambook.caption|e }}:</b>{% endif%}
+                             {{ word.viewinterpretations[0].caption|raw|nl2br|striptags|slice(0, 250) }}... <a target="_blank" href="{{ url('oneword', {'alias': word.alias}) }}">Еще толкования</a>
+                             <hr/>
+                             {% set interlength = interlength+250  %}
+                             {% if (interlength>3000) and (codes.intexts[i] is defined) %}
+                                 <div>
+                                     {{ codes.intexts[i].code|raw }}
+                                     {% set i=i+1 %}
+                                     {% set interlength = 0 %}
+                                 </div>
+                             {% endif %}
+                         {% else %}
+                             Увы, ничего не найдено
+                         {% endfor %}
+                         {% include 'pages/searchpagintation.html.twig' %}
+                     </div>
+
+                 </div>
+             </div>
+         </div>
+
+            <div class="row">
+                 <div class="col-xs-12">
+                     <a class="btn btn-default" href="{{ url('homepage') }}">На главную</a>
+                 </div>
+            </div>
+     </div>
+
+ {% endblock %}

@@ -1,0 +1,5 @@
+{% if element.image %}
+    <img style="max-width: 100%;" alt="{{ element.caption|e }}" src="{{ asset('/images/elements/'~element.image|e) }}">
+{% else %}
+    <img style="max-width: 100%;" alt="" src="{{ asset('/images/elements/noimage.png') }}">
+{% endif %}

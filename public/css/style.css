@@ -1,0 +1,67 @@
+/* Стили для плашки с результатами */
+.search_result {
+    position: absolute;
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 10px;
+    z-index: 9999;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.mainsearch {
+    width:500px;
+    max-width:100%;
+}
+.btn-letter {
+    margin-top:5px;
+}
+
+.todaypreheader {
+    font-size:larger;
+}
+
+.words-list {
+    margin-top:5px;
+}
+
+.todayshort {
+    border:1px solid black; margin-top:10px;padding:5px;
+}
+
+.balldream {
+    font-size:2rem;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 55px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 55px;
+    padding-top:17px;
+    color:#9d9d9d;
+}
+
+
+
+
+.block-content {
+    background-color: white;
+    padding-bottom: 15px;
+}
+
+.text40 {
+    font-size:40px;
+}
+
+.modal-header .close {
+    margin-top:-21px;
+}
+

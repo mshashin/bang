@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
+        <title>{% block title %}{% endblock %} | Настольная игра "BANG!"</title>
+        <meta name="description" content='{% block meta_desctiption %}{% endblock %}' />
+        <meta name="robots" content="index, follow" />
+        <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" />
+
+        {% block stylesheets %}
+
+        {% endblock %}
+        <script type="text/javascript" src="{{ asset('js/jquery-2.1.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/jquery.cookie.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
+
+
+        {% block javascripts %}
+            {% if codes.allpageshead  %}
+            {{ codes.allpageshead.code|raw }}
+            {% endif %}
+        {% endblock %}
+    </head>
+    <body style="padding-top:70px; background-color: #A9A574; /*background-image: url('{{ asset('images/back.jpg') }}');*/">
+        {% include 'navbar.html.twig' %}
+        {% block body %}{% endblock %}
+
+        {% if codes.allpagesafterbody  %}
+            {{ codes.allpagesafterbody.code|raw }}
+        {% endif %}
+
+        {% include 'footer.html.twig' %}
+
+        {% if codes.allpagesfoot %}
+            {{ codes.allpagesfoot.code|raw }}
+        {% endif %}
+    </body>
+</html>

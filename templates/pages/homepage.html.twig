@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Главная страница{% endblock %}
+
+ {% block body %}
+     <div class="container">
+         <div class="row">
+             <div class="col-xs-12">
+                 <div class="panel panel-default">
+                     <div class="panel-heading">
+                         <h1>BANG! Проверка сочетаний элементов игры</h1>
+                     </div>
+                     <div class="panel-body">
+                         <div class="row">
+                             <div class="col-xs-12">
+                                 <label for="element_id1" class="form-control-label">Элемент1:</label>
+                                 <select class="form-control selectpicker" title="--Выбор из списка--"  id="element_id1" data-live-search="true" name="element_id1">
+                                     {% for elem in elements  %}
+                                         <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                     {% endfor %}
+                                 </select>
+                             </div>
+                             <div class="col-xs-12 text-center text40" ><span class="glyphicon glyphicon-plus"></span></div>
+                             <div class="col-xs-12">
+                                 <label for="element_id2" class="form-control-label">Элемент2:</label>
+                                 <select class="form-control selectpicker" title="--Выбор из списка--"  id="element_id2" data-live-search="true" name="element_id2">
+                                     {% for elem in elements  %}
+                                         <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                     {% endfor %}
+                                 </select>
+                             </div>
+                             <div class="col-xs-12 text-center text40"><span class="glyphicon glyphicon-arrow-down"></span></div>
+                             <div class="col-xs-12" id="answer">
+                         </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <script>
+
+         $('.selectpicker').selectpicker();
+         $("select").on("changed.bs.select",
+             function(e, clickedIndex, newValue, oldValue) {
+                 var $selected1=$('select[id=element_id1] option').filter(':selected');
+                 var $selected2=$('select[id=element_id2] option').filter(':selected');
+                 var $answer=$('#answer');
+                 if ($selected1.val() == $selected2.val()){
+                     $answer.html('');
+                 }
+                 else {
+                     if ($selected1.val() && $selected2.val()) {
+                         $.ajax({
+                             type: "POST",
+                             url: "{{ url('getruleajax') }}",
+                             data: {'element_id1': $selected1.val(),'element_id2': $selected2.val()},
+                             success: function(msg){
+                                 $answer.html(msg);
+                             }
+                         });
+                     }
+                     else {
+                         $answer.html('');
+                     }
+                 }
+             });
+     </script>
+
+ {% endblock %}

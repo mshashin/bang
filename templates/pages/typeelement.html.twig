@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}{{ typeelement.caption|e }} {% endblock %}
+
+
+{% block meta_desctiption %}"{{ typeelement.caption|e }}"
+{% endblock %}
+
+
+ {% block body %}
+     <div class="container block-content">
+         <div class="row">
+             <div class="col-xs-12">
+                 <h1>{{ typeelement.caption|e }}{% if app.environment=='dev' %} [{{ typeelement.id|e }}]{% endif %}</h1>
+             </div>
+             <div class="col-xs-12">
+                 {{ typeelement.description|nl2br }}
+             </div>
+         </div>
+         <hr/>
+         {% for element in elements %}
+         <div class="row">
+             <div class="col-xs-12">
+                 <a href="{{ url('oneelement', {'typealias':typeelement.alias, 'elementalias':element.alias }) }}">{{ element.caption|e }}</a>
+             </div>
+         </div>
+         {% endfor %}
+         <hr/>
+         <div class="row">
+             <div class="col-xs-12">
+                 <a class="btn btn-default" href="{{ url('homepage') }}">На главную</a>
+             </div>
+         </div>
+     </div>
+
+ {% endblock %}

@@ -1,0 +1,17 @@
+<div class="answer">
+{% for row in rules_arr %}
+    <p>{{ row.rule.caption|e }}</p>
+    {% if row.also|length >0 %}
+        <p>
+            <b>См. также:</b>
+            {% for elem in row.also %}
+                {% if loop.index>1 %}, {% endif %}
+                <a href="{{ url('oneelement', {'typealias':elem.type.alias|e, 'elementalias': elem.alias|e}) }}">{{ elem.caption|e }}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
+{% else %}
+    <p>Нет никаких правил</p>
+    {% if app.user %}<p><a>Добавить</a></p>{% endif %}
+{% endfor %}
+</div>

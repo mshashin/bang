@@ -1,0 +1,28 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url('homepage') }}">На главную</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                {% for menuitem in menuitems %}
+                <li><a href="{{ url('onetypeelement', {'typealias':menuitem.alias|e}) }}">{{ menuitem.caption|e }}</a></li>
+               {% endfor %}
+            </ul>
+             <form action="{{ url('search') }}" class="navbar-form navbar-right" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" id="search" placeholder="Поиск..">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+                <div id="navsearch_box-result"></div>
+            </form>
+        </div>
+    </div>
+</nav>
