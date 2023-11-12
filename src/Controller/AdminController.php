@@ -25,10 +25,11 @@ class AdminController extends InitializableController
         if (!$element) {
             return $this->createNotFoundException();
         }
-        $rule= new Rule();
-        $rule->setCaption($description);
-        $rule->addElement($element);
+
         if ($elements2) {
+            $rule= new Rule();
+            $rule->setCaption($description);
+            $rule->addElement($element);
             foreach ($elements2 as $element_id2){
                 /** @var Element $element2 */
                 $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
@@ -36,11 +37,20 @@ class AdminController extends InitializableController
                     $rule->addElement($element2);
                 }
             }
+            $this->manager->persist($rule);
+            $this->manager->flush();
         }
-        $this->manager->persist($rule);
-        $this->manager->flush();
+        else {
+            $element->setDescription($element->getDescription().PHP_EOL.'* '.$description);
+            $this->manager->persist($element);
+            $this->manager->flush();
+        }
+
+
         return $this->redirectToRoute('oneelement',
-           array('typealias'=>$element->getTypeElement()->getAlias(), 'elementalias'=>$element->getAlias()));
+            array('typealias'=>$element->getTypeElement()->getAlias(), 'elementalias'=>$element->getAlias()));
+
+
 
     }
 
@@ -61,6 +71,8 @@ class AdminController extends InitializableController
         if (!$element or !$rule) {
             return $this->createNotFoundException();
         }
+
+        if ($elements2) {
         $rule->setCaption($description);
         /** @var Element $elem */
         foreach ($rule->getElements() as $elem){
@@ -70,8 +82,6 @@ class AdminController extends InitializableController
         }
         $this->manager->persist($rule);
         $this->manager->flush();
-
-        if ($elements2) {
             foreach ($elements2 as $element_id2){
                 /** @var Element $element2 */
                 $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
@@ -79,6 +89,12 @@ class AdminController extends InitializableController
                     $rule->addElement($element2);
                 }
             }
+        }
+        else {
+            $element->setDescription($element->getDescription().PHP_EOL.'* '.$description);
+            $this->manager->remove($rule);
+            $this->manager->persist($element);
+            $this->manager->flush();
         }
 
 
