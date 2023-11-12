@@ -39,3 +39,7 @@ $(document).ready(function() {
 
 });
 
+function getNameElement(s){
+    return s.substr(0,s.indexOf('('));
+}
+

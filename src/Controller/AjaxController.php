@@ -64,6 +64,8 @@ class AjaxController extends InitializableController
             $element_id2=$_POST['element_id2'];
         }
         if ($element_id1 and $element_id2) {
+            $element1=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id1));
+            $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
             $rules=$this->getRepository(Rule::class)->createQueryBuilder('r')
                 ->leftJoin('r.elements','e1')
                 ->leftJoin('r.elements','e2')
@@ -84,7 +86,7 @@ class AjaxController extends InitializableController
                 array_push($rules_arr, array('rule'=>$rule,'also'=>$also_arr));
             }
 
-            return $this->render('answerajax.html.twig', array('rules_arr'=>$rules_arr));
+            return $this->render('answerajax.html.twig', array('rules_arr'=>$rules_arr, 'element1'=>$element1, 'element2'=>$element2));
 
         }
         else {

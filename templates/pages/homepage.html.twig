@@ -49,10 +49,10 @@
                  var $selected2=$('select[id=element_id2] option').filter(':selected');
                  var $answer=$('#answer');
                  if ( $(this).attr('id')=='element_id1') {
-                     $('#selected1info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected1.val()+'">Подробнее про '+$selected1.text()+'</a>')
+                     $('#selected1info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected1.val()+'">Подробнее про '+getNameElement($selected1.text())+'</a>')
                  }
                  if ( $(this).attr('id')=='element_id2') {
-                     $('#selected2info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected2.val()+'">Подробнее про '+$selected2.text()+'</a>')
+                     $('#selected2info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected2.val()+'">Подробнее про '+getNameElement($selected2.text())+'</a>')
                  }
                  if ($selected1.val() == $selected2.val()){
                      $answer.html('');

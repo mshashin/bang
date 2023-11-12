@@ -11,7 +11,10 @@
         </p>
     {% endif %}
 {% else %}
-    <p>Нет никаких правил</p>
-    {% if app.user %}<p><a>Добавить</a></p>{% endif %}
+    <p>Нет никаких правил про сочетание
+        "<a href="{{ url('oneelement', {'typealias':element1.type.alias|e, 'elementalias': element1.alias|e}) }}">{{ element1.caption|e }}</a>" и
+        "<a href="{{ url('oneelement', {'typealias':element2.type.alias|e, 'elementalias': element2.alias|e}) }}">{{ element2.caption|e }}</a>"
+    </p>
+    {% if app.user %}<p><a class="btn btn-info"><span class="glyphicon glyphicon-plus"></span> Добавить</a></p>{% endif %}
 {% endfor %}
 </div>

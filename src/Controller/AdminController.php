@@ -45,12 +45,8 @@ class AdminController extends InitializableController
             $this->manager->persist($element);
             $this->manager->flush();
         }
-
-
         return $this->redirectToRoute('oneelement',
             array('typealias'=>$element->getTypeElement()->getAlias(), 'elementalias'=>$element->getAlias()));
-
-
 
     }
 

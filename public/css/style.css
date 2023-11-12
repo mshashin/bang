@@ -94,3 +94,7 @@ body {
     text-align: center;
 }
 
+.search_row {
+    padding-top:5px;
+    padding-bottom:5px;
+}
