@@ -98,3 +98,27 @@ body {
     padding-top:5px;
     padding-bottom:5px;
 }
+
+.element_2 {
+    padding:5px;
+    text-decoration:underline dotted blue;
+    margin:0;
+}
+.element_2:hover {
+    background-color: #dba3a3;
+    cursor: pointer;
+}
+.element_2:after {
+    content:' X';
+    color:red;
+}
+
+.elementheader {
+    margin-top:0;
+}
+
+.oneelement {
+    padding-bottom:10px;
+    padding-top:10px;
+    border-bottom: 1px solid black;
+}

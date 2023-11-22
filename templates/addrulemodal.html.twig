@@ -1,0 +1,53 @@
+<div class="modal fade" id="addRuleModal" tabindex="-1" role="dialog" aria-labelledby="addRuleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRuleModalLabel">Добавление нового правила {% if element is defined %}для <b>"{{ element.caption|e }}"{% endif %}</b></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editruleForm" action="{{ url('addrule') }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="addRuleDescription" class="form-control-label">Текст правила:</label>
+                        <textarea class="form-control" aria-required="true" required id="addRuleDescription" name="description" style="min-height:40vh"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="element_id2" class="form-control-label">{% if element is defined %}Также привязать элементы:{% else %}Связываемые элементы:{% endif %}</label>
+                        <div class="row">
+                            <div class="col-xs-12" id="elements2">
+                                {% if element1 is defined and element2 is defined %}
+                                    <p title="Кликните для удаления" class="element_2" data-id="{{element1.id}}">{{ element1.caption|e }} ({{ element1.type.caption|e }})</p>
+                                    <input name="elements2[]" type="hidden" value="{{element1.id}}">
+                                    <p title="Кликните для удаления" class="element_2" data-id="{{element2.id}}">{{ element2.caption|e }} ({{ element2.type.caption|e }})</p>
+                                    <input name="elements2[]" type="hidden" value="{{element2.id}}">
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_ids2" data-live-search="true" name="element_id2">
+                                    {% for elem in alsoelements  %}
+                                        {% if element is defined %}
+                                            {% if elem.id != element.id %}
+                                                <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                            {% endif %}
+                                        {% else %}
+                                            <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    {% if element is defined %}
+                    <input type="hidden" name="element_id1" value="{{ element.id|e }}">
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Добавить правило</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %}Главная страница{% endblock %}
+{% block title %}
+    {% if element1 is not empty and element2 is not empty %}
+    BANG! Как играются "{{ element1.caption|e }}" и "{{ element2.caption|e }}"?
+{% else%}
+    BANG! Проверка сочетаний элементов игры
+{% endif %}{% endblock %}
 
  {% block body %}
      <div class="container">
@@ -9,7 +14,11 @@
              <div class="col-xs-12">
                  <div class="panel panel-default">
                      <div class="panel-heading">
-                         <h1>BANG! Проверка сочетаний элементов игры</h1>
+                         {% if element1 is not empty and element2 is not empty %}
+                             <h1>BANG! Как играются "{{ element1.caption|e }}" и "{{ element2.caption|e }}"?</h1>
+                         {% else%}
+                             <h1>BANG! Проверка сочетаний элементов игры</h1>
+                         {% endif %}
                      </div>
                      <div class="panel-body">
                          <div class="row">
@@ -17,23 +26,33 @@
                                  <label for="element_id1" class="form-control-label">Элемент1:</label>
                                  <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id1" data-live-search="true" name="element_id1">
                                      {% for elem in elements  %}
-                                         <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                         <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}" {% if element1 is not empty and elem.id==element1.id %}selected="selected"{% endif %}>{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
                                      {% endfor %}
                                  </select>
-                                 <div class="selectedinfo" id="selected1info"></div>
+                                 <div class="selectedinfo" id="selected1info">
+                                     {% if element1 is not empty %}
+                                         <span class="glyphicon glyphicon-question-sign text-danger"></span> Подробнее про <a href="{{ url('oneelement',{'typealias':element1.type.alias|e, 'elementalias':element1.alias|e}) }}">{{ element1.caption|e }}</a>
+                                     {% endif %}
+                                 </div>
                              </div>
                              <div class="col-xs-12 text-center text40" ><span class="glyphicon glyphicon-plus"></span></div>
                              <div class="col-xs-12">
                                  <label for="element_id2" class="form-control-label">Элемент2:</label>
                                  <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id2" data-live-search="true" name="element_id2">
                                      {% for elem in elements  %}
-                                         <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}">{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
+                                         <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}" {% if element2 is not empty and elem.id==element2.id %}selected="selected"{% endif %}>{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
                                      {% endfor %}
                                  </select>
-                                 <div class="selectedinfo" id="selected2info"></div>
+                                 <div class="selectedinfo" id="selected2info">
+                                     {% if element2 is not empty %}
+                                         <span class="glyphicon glyphicon-question-sign text-danger"></span> Подробнее про <a href="{{ url('oneelement',{'typealias':element2.type.alias|e, 'elementalias':element2.alias|e}) }}">{{ element2.caption|e }}</a>
+                                     {% endif %}
+                                 </div>
                              </div>
                              <div class="col-xs-12 text-center text40"><span class="glyphicon glyphicon-arrow-down"></span></div>
-                             <div class="col-xs-12" id="answer"></div>
+                             <div class="col-xs-12" id="answer">
+                                 {% if answer is not empty %}{{ answer|raw }}{% endif %}
+                             </div>
                          </div>
                     </div>
                 </div>
@@ -43,19 +62,33 @@
      <script>
 
          $('.selectpicker').selectpicker();
-         $("select").on("changed.bs.select",
+         $('select').on("changed.bs.select",
              function(e, clickedIndex, newValue, oldValue) {
                  var $selected1=$('select[id=element_id1] option').filter(':selected');
                  var $selected2=$('select[id=element_id2] option').filter(':selected');
+                 var params = new URLSearchParams( window.location.search );
                  var $answer=$('#answer');
                  if ( $(this).attr('id')=='element_id1') {
-                     $('#selected1info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected1.val()+'">Подробнее про '+getNameElement($selected1.text())+'</a>')
+                     $('#selected1info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> Подробнее про <a href="/byid/'+$selected1.val()+'">'+getNameElement($selected1.text())+'</a>')
+                     if ($selected1.val()) {
+                         params.set( 'element_id1', $selected1.val() );
+                     }
                  }
                  if ( $(this).attr('id')=='element_id2') {
-                     $('#selected2info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> <a href="/byid/'+$selected2.val()+'">Подробнее про '+getNameElement($selected2.text())+'</a>')
+                     $('#selected2info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> Подробнее про <a href="/byid/'+$selected2.val()+'">'+getNameElement($selected2.text())+'</a>')
+                     if ($selected2.val()) {
+                         params.set( 'element_id2', $selected2.val() );
+                     }
                  }
-                 if ($selected1.val() == $selected2.val()){
+                 if ($selected1.val()) {
+                     $('h1').html('<h1>BANG! Как играются "'+getNameElement($selected1.text())+'" и "'+getNameElement($selected2.text())+'"?</h1>');
+                     $(document).prop('title', 'BANG! Как играются "'+getNameElement($selected1.text())+'" и "'+getNameElement($selected2.text())+'"?');
+                 }
+
+                 if ($selected1.val()!='' && $selected1.val() == $selected2.val()){
                      $answer.html('');
+                     params.set( 'element_id1', '' );
+                     params.set( 'element_id2', '' );
                  }
                  else {
                      if ($selected1.val() && $selected2.val()) {
@@ -72,7 +105,12 @@
                          $answer.html('');
                      }
                  }
+                 if (params.toString().length>0) {
+                     var newUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+                     window.history.replaceState( null, null, newUrl );
+                 }
              });
+         $('.selectpicker').trigger('changed');
      </script>
 
  {% endblock %}

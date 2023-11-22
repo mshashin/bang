@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Element;
 use App\Entity\Rule;
 use App\Entity\TypeElement;
+use http\Client\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +22,28 @@ class DefaultController extends InitializableController
         ->orderBy('e.caption')
         ->getQuery()->getResult();
 
+        $element_id1=$this->request->get('element_id1');
+        $element_id2=$this->request->get('element_id2');
+        $element1=null;
+        $element2=null;
+        $answer=null;
+        if ($element_id1 and $element_id2) {
+            $element1=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id1));
+            $element2=$this->getRepository(Element::class)->findOneBy(array('id'=>$element_id2));
+            if ($element1 and $element2) {
+                $url=$this->generateUrl('getruleajax',array(),0);
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS,
+                    "element_id1=".$element_id1."&element_id2=".$element_id2);
+                $answer = curl_exec($ch);
+            }
+        }
 
         return $this->render('pages/homepage.html.twig',
-            array('elements'=>$elements)
+            array('elements'=>$elements, 'element1'=>$element1, 'element2'=>$element2, 'answer'=>$answer)
         );
 
     }

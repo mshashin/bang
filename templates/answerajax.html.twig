@@ -1,5 +1,6 @@
 <div class="answer">
 {% for row in rules_arr %}
+    {% if loop.index>1 %}<hr/>{% endif %}
     <p>{{ row.rule.caption|e }}</p>
     {% if row.also|length >0 %}
         <p>
@@ -10,11 +11,68 @@
             {% endfor %}
         </p>
     {% endif %}
+    {% if app.user %}
+    <p><a class="btn btn-info" data-toggle="modal" data-id="{{ row.rule.id|e }}" data-caption="{{ row.rule.caption }}" data-target="#editRuleModal"><span class="glyphicon glyphicon-pemcil"></span> Изменить</a></p>
+    {{ include('editrulemodal.html.twig',{'element1':element1,'element2':element2,'alsoelements':elements,'alsoselected':row.also}) }}
+    <script>
+        $('.selectpicker').selectpicker();
+        $("#element_id2-edit").on("changed.bs.select",
+            function(e, clickedIndex, newValue, oldValue) {
+                var $selected=$('select[id=element_id2-edit] option').filter(':selected')
+                var $elements2=$('#elements2-edit')
+                $elements2.append('<p title="Кликните для удаления" class="element_2" data-id="'+$selected.val()+'">'+$selected.text()+'</p>');
+                $elements2.append('<input name="elements2[]" type="hidden" value="'+$selected.val()+'">');
+
+                $('.element_2').on('click',function(e) {
+                    $('input[value="'+$(this).data('id')+'"]').remove();
+                    $(this).remove();
+                });
+
+                e.val('default');
+                e.selectpicker('refresh');
+            })
+        $('#editRuleModal').on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget)
+            var modal = $(this)
+            var elements2=$('#elements2-edit')
+            elements2.html($('#alsoelemsrule'+button.data('id')).html());
+            $('.element_2').on('click',function(e) {
+                $('input[value="'+$(this).data('id')+'"]').remove();
+                $(this).remove();
+            });
+            modal.find('#descriptionrule').val(button.data('caption'));
+            modal.find('#rule_id').val(button.data('id'));
+        })
+    </script>
+    {% endif %}
+
 {% else %}
     <p>Нет никаких правил про сочетание
         "<a href="{{ url('oneelement', {'typealias':element1.type.alias|e, 'elementalias': element1.alias|e}) }}">{{ element1.caption|e }}</a>" и
         "<a href="{{ url('oneelement', {'typealias':element2.type.alias|e, 'elementalias': element2.alias|e}) }}">{{ element2.caption|e }}</a>"
     </p>
-    {% if app.user %}<p><a class="btn btn-info"><span class="glyphicon glyphicon-plus"></span> Добавить</a></p>{% endif %}
+    {% if app.user %}
+        <p><a class="btn btn-info" data-toggle="modal" data-target="#addRuleModal"><span class="glyphicon glyphicon-plus"></span> Добавить</a></p>
+        {{ include('addrulemodal.html.twig',{'element1':element1,'element2':element2,'alsoelements':elements}) }}
+        <script>
+            $('.selectpicker').selectpicker();
+            $("#element_ids2").on("changed.bs.select",
+                function(e, clickedIndex, newValue, oldValue) {
+                    var $selected=$('select[id=element_ids2] option').filter(':selected')
+                    var $elements2=$('#elements2')
+                    $elements2.append('<p title="Кликните для удаления" class="element_2" data-id="'+$selected.val()+'">'+$selected.text()+'</p>');
+                    $elements2.append('<input name="elements2[]" type="hidden" value="'+$selected.val()+'">');
+
+                    $('.element_2').on('click',function(e) {
+                        $('input[value="'+$(this).data('id')+'"]').remove();
+                        $(this).remove();
+                    });
+
+                    e.val('default');
+                    e.selectpicker('refresh');
+                })
+
+        </script>
+    {% endif %}
 {% endfor %}
 </div>
