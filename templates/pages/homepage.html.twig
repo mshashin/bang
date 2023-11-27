@@ -68,13 +68,13 @@
                  var $selected2=$('select[id=element_id2] option').filter(':selected');
                  var params = new URLSearchParams( window.location.search );
                  var $answer=$('#answer');
-                 if ( $(this).attr('id')=='element_id1') {
+                 if ( $(this).attr('id')=='element_id1' && $selected1.val()!='') {
                      $('#selected1info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> Подробнее про <a href="/byid/'+$selected1.val()+'">'+getNameElement($selected1.text())+'</a>')
                      if ($selected1.val()) {
                          params.set( 'element_id1', $selected1.val() );
                      }
                  }
-                 if ( $(this).attr('id')=='element_id2') {
+                 if ( $(this).attr('id')=='element_id2'  && $selected2.val()!='') {
                      $('#selected2info').html('<span class="glyphicon glyphicon-question-sign text-danger"></span> Подробнее про <a href="/byid/'+$selected2.val()+'">'+getNameElement($selected2.text())+'</a>')
                      if ($selected2.val()) {
                          params.set( 'element_id2', $selected2.val() );
