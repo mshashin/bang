@@ -37,7 +37,7 @@
             var elements2=$('#elements2-edit')
             elements2.html($('#alsoelemsrule'+button.data('id')).html());
             $('.element_2').on('click',function(e) {
-                $('input[name=elements2[] value="'+$(this).data('id')+'"]').remove();
+                $('input[name=elements2[]][value="'+$(this).data('id')+'"]').remove();
                 $(this).remove();
             });
             modal.find('#descriptionrule').val(button.data('caption'));
@@ -64,7 +64,7 @@
                     $elements2.append('<input name="elements2[]" type="hidden" value="'+$selected.val()+'">');
 
                     $('.element_2').on('click',function(e) {
-                        $('input[name=elements2[] value="'+$(this).data('id')+'"]').remove();
+                        $('input[name=elements2[]][value="'+$(this).data('id')+'"]').remove();
                         $(this).remove();
                     });
 
