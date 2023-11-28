@@ -81,6 +81,9 @@ class AdminController extends InitializableController
             $this->manager->flush();
             return $this->redirectToRoute('homepage');
         }
+        if (!$elements2 and $element) {
+            $elements2=array();
+        }
         if ($element) {
             array_push($elements2,$element->getId());
         }
