@@ -89,7 +89,6 @@ class AdminController extends InitializableController
         }
 
 
-
         if (count($elements2)>1) {
             $rule->setCaption($description);
             //удаляем старые связи элементов с редактируемым правилом
@@ -134,9 +133,6 @@ class AdminController extends InitializableController
             }
             return $this->redirectToRoute('homepage',$gets);
         }
-
-
-
     }
 
     /**
