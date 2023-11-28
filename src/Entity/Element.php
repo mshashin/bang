@@ -64,6 +64,11 @@ class Element
      */
     private $short;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ghost;
+
     public function __construct()
     {
         $this->rules = new ArrayCollection();
@@ -195,6 +200,18 @@ class Element
     public function setShort(?string $short): self
     {
         $this->short = $short;
+
+        return $this;
+    }
+
+    public function getGhost(): ?string
+    {
+        return $this->ghost;
+    }
+
+    public function setGhost(?string $ghost): self
+    {
+        $this->ghost = $ghost;
 
         return $this;
     }

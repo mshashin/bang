@@ -18,6 +18,7 @@
                  <h1>{{ element.caption|e }}{% if app.environment=='dev' %} [{{ element.id|e }}]{% endif %}</h1>
                  <p><b>Базовое описание:</b> {{ element.short|e }}</p>
                  {% if element.addition %}<p><b>Дополнение:</b> {{ element.addition.caption|e }}</p>{% endif %}
+                 {% if element.ghost %}<p><b>Призрачный стрелок:</b> {{ element.ghost|e }}</p>{% endif %}
                  {% if element.description %}<p><b>Дополнительные комментарии: </b><br/> {{ element.description|nl2br }}</p>{% endif %}
                  {% if app.user %}
                      <p>

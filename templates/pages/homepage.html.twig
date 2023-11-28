@@ -24,7 +24,7 @@
                          <div class="row">
                              <div class="col-xs-12">
                                  <label for="element_id1" class="form-control-label">Элемент1:</label>
-                                 <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id1" data-live-search="true" name="element_id1">
+                                 <select class="form-control selectpicker" data-size="5" title="--Выбор из списка--"  id="element_id1" data-live-search="true" data-width="100%" name="element_id1">
                                      {% for elem in elements  %}
                                          <option data-tokens="{{ elem.caption|lower }}" value="{{ elem.id|e }}" {% if element1 is not empty and elem.id==element1.id %}selected="selected"{% endif %}>{{ elem.caption|e }} ({{ elem.typeelement.caption|e }})</option>
                                      {% endfor %}
@@ -60,7 +60,6 @@
         </div>
      </div>
      <script>
-
          $('.selectpicker').selectpicker();
          $('select').on("changed.bs.select",
              function(e, clickedIndex, newValue, oldValue) {
