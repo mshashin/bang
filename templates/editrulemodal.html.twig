@@ -19,14 +19,14 @@
                             <div class="col-xs-12" id="elements2-edit">
                                 {% if element1 is defined and element2 is defined %}
                                     <p title="Кликните для удаления" class="element_2" data-id="{{element1.id}}">{{ element1.caption|e }} ({{ element1.type.caption|e }})</p>
-                                    <input name="elements2[]" type="hidden" value="{{element1.id}}">
+                                    <input name="elements2[]" class="elements2" type="hidden" value="{{element1.id}}">
                                     <p title="Кликните для удаления" class="element_2" data-id="{{element2.id}}">{{ element2.caption|e }} ({{ element2.type.caption|e }})</p>
-                                    <input name="elements2[]" type="hidden" value="{{element2.id}}">
+                                    <input name="elements2[]" class="elements2" type="hidden" value="{{element2.id}}">
                                 {% endif %}
                                 {% if alsoselected is defined %}
                                     {% for alsoselectedelem in alsoselected %}
                                         <p title="Кликните для удаления" class="element_2" data-id="{{alsoselectedelem.id}}">{{ alsoselectedelem.caption|e }} ({{ alsoselectedelem.type.caption|e }})</p>
-                                        <input name="elements2[]" type="hidden" value="{{alsoselectedelem.id}}">
+                                        <input name="elements2[]" class="elements2" type="hidden" value="{{alsoselectedelem.id}}">
                                     {% endfor %}
                                 {% endif %}
                             </div>
