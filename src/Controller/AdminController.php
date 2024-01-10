@@ -36,6 +36,7 @@ class AdminController extends InitializableController
                     $rule->addElement($element2);
                 }
             }
+            $rule->setUser($this->user);
             $this->manager->persist($rule);
             $this->manager->flush();
         }

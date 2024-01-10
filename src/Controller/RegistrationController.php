@@ -32,34 +32,39 @@ class RegistrationController extends InitializableController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+        $errors=array();
+        if ($form->isSubmitted()) {
+            $valid=true;
+            $email=$user->getEmail();
+            $sames=$this->getRepository(User::class)->findBy(array('email'=>$email));
+            if ($sames) {
+                array_push($errors,'Пользователь с таким email уже существует');
+                $valid=false;
+            }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            if (strlen($form->get('plainPassword')->getData())<6) {
+                array_push($errors,'Пароль должен быть длинее 5 символов');
+                $valid=false;
+            }
+            if ($valid) {
+                // encode the plain password
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_login');
+            }
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('noreply@bang.local', 'BANG!'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-
-            return $this->redirectToRoute('index');
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'errors'=>$errors
         ]);
     }
 

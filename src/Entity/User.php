@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -42,6 +44,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $username;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Rule::class, mappedBy="user")
+     */
+    private $rules;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $active;
+
+    public function __construct()
+    {
+        $this->rules = new ArrayCollection();
+        $this->active=true;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**
@@ -139,6 +162,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rule>
+     */
+    public function getRules(): Collection
+    {
+        return $this->rules;
+    }
+
+    public function addRule(Rule $rule): self
+    {
+        if (!$this->rules->contains($rule)) {
+            $this->rules[] = $rule;
+            $rule->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRule(Rule $rule): self
+    {
+        if ($this->rules->removeElement($rule)) {
+            // set the owning side to null (unless already changed)
+            if ($rule->getUser() === $this) {
+                $rule->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

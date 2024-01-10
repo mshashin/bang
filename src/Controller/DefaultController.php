@@ -170,7 +170,7 @@ class DefaultController extends InitializableController
 
 
     /**
-     * @Route("/search", methods={"GET","HEAD"}, name="search")
+     * @Route("/search", methods={"GET","HEAD"}, name="search", priority="2")
      */
     public function search()
     {
@@ -197,9 +197,8 @@ class DefaultController extends InitializableController
             foreach ($searcharray as $item){
                 //исключаем предлоги
                 if (strlen($item)>4) {
-                    $tempwords=$this->getRepository(Word::class)->createQueryBuilder('w')
+                    $tempwords=$this->getRepository(Element::class)->createQueryBuilder('w')
                         ->where('LOWER(w.caption) like LOWER(:search)')
-                        ->andWhere('w.active = 1')
                         ->setParameter('search', '%'.trim($item).'%')
                         ->getQuery()->getResult();;
                     $allwords=array_merge($allwords,$tempwords);

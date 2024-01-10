@@ -54,6 +54,7 @@
                                                  <div class="col-sm-10 col-xs-8">
                                                      <a href="{{ url('oneelement', {'typealias':rule.main.type.alias|e, 'elementalias': rule.main.alias|e}) }}"><h4 class="elementheader" >{{ rule.main.caption|e }}</h4></a>
                                                      <p>{{ rule.rule.caption|nl2br }}</p>
+                                                     <p class="text-right"><i>{{ rule.rule.createdAt|date('d.m.Y') }} by {{ rule.rule.user.username|e }}</i></p>
                                                      {% set elem_ids=elem_ids|merge([rule.main.id]) %}
                                                      {% if rule.also|length>0 %}
                                                          <p><b>См. также:</b>

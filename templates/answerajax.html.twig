@@ -1,8 +1,10 @@
 <div class="answer">
 {% for row in rules_arr %}
     {% if loop.index>1 %}<hr/>{% endif %}
-    <p>{{ row.rule.caption|e }}</p>
+    <p>"{{ row.rule.caption|e }}"</p>
+    <p class="text-right"><i>{{ row.rule.createdAt|date('d.m.Y') }} by {{ row.rule.user.username|e }}</i></p>
     {% if row.also|length >0 %}
+    <hr/>
         <p>
             <b>См. также:</b>
             {% for elem in row.also %}

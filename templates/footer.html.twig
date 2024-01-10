@@ -1,19 +1,17 @@
-{#
+
 
 <footer class="footer navbar-default">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 text-center">Возрастное ограчение: 18+. По всем вопросам: info@{{ app.request.host|e }}</div>
-            {% if app.environment=='dev' %}
-                <div class="col-xs-12 text-center">
+            <div class="col-xs-12 text-center">
                 {% if app.user %}
-                {{ app.user.email|e }} <a href="{{ url('app_logout') }}">Выйти</a>
-                    {% else %}
-                        <a href="{{ url('app_login') }}">Войти</a>
-                    {% endif %}
-                </div>
-            {% endif %}
+                    Привет, {{ app.user.username|e }}!
+                    <a class="btn navbar-btn btn-danger" href="{{ url('app_logout') }}">Выйти</a>
+                {% else %}
+                    <a class="btn navbar-btn btn-success" href="{{ url('app_login') }}">Войти</a>
+                {% endif %}
+            </div>
+
         </div>
     </div>
 </footer>
-     #}

@@ -13,7 +13,11 @@
                 {% for menuitem in menuitems %}
                 <li><a href="{{ url('onetypeelement', {'typealias':menuitem.alias|e}) }}">{{ menuitem.caption|e }}</a></li>
                {% endfor %}
+                {% if is_granted('ROLE_ADMIN') %}
+                <li> <a href="{{ url('users_index') }}">Пользователи</a></li>
+                {% endif %}
             </ul>
+
              <form action="{{ url('search') }}" class="navbar-form navbar-right" role="search">
                 <div class="input-group">
                     <input type="text" class="form-control" name="search" id="search" placeholder="Поиск..">
