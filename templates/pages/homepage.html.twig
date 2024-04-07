@@ -8,6 +8,14 @@
     BANG! Проверка сочетаний элементов игры
 {% endif %}{% endblock %}
 
+{% block meta_desctiption %}
+    {% if element1 is not empty and element2 is not empty %}
+        Настрольная игра "BANG!": как играть совместно "{{ element1.caption|e }}" и "{{ element2.caption|e }}", подробное разъяснение редких сочетаний элементов?
+    {% else%}
+        Настрольная игра "BANG!" Проверка сочетаний разных элементов игры
+    {% endif %}{% endblock %}
+{% endblock %}
+
  {% block body %}
      <div class="container">
          <div class="row">
